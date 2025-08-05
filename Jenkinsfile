@@ -1,18 +1,24 @@
 pipeline {
     agent any
     stages {
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Building the application...'
-                // Replace with your build command, e.g., 'mvn clean package' or 'npm install'
-                // A new commit to test the webhook
-                // 2nd commit
+                script {
+                    echo 'Building the Docker image...'
+                    // Build the Docker image from the Dockerfile
+                    sh 'sudo docker build -t my-web-app:latest .'
+                }
             }
-        }
-        stage('Test') {
-            steps {
-                echo 'Running tests...'
-                // Replace with your test command, e.g., 'mvn test' or 'npm test'
+            stage('Run Docker Container') {
+                steps {
+                    script {
+                        echo 'Running the Docker container...'
+                        // Stop and remove any old container to avoid conflicts
+                        sh 'sudo docker rm -f my-web-app || true'
+                        // Run the new container, exposing it on a different port
+                        sh 'sudo docker run -d --name my-web-app -p 8081:80 my-web-app:latest'
+                    }
+                }
             }
         }
     }
