@@ -5,6 +5,7 @@ pipeline {
             steps {
                 echo 'Building the application...'
                 // Replace with your build command, e.g., 'mvn clean package' or 'npm install'
+                // A new commit to test the webhook
             }
         }
         stage('Test') {
